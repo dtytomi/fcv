@@ -1,5 +1,4 @@
-const API_BASE = "http://free.currencyconverterapi.com/api/v5/";
-const API_CURRENCIES = API_BASE + "currencies";
+const API_BASE = "https://free.currencyconverterapi.com/api/v5/";
 
 /**
  * Install the service worker
@@ -18,7 +17,7 @@ async function installServiceWorkerAsync() {
 /**
  * loadCurrencies from the internet and place it on a target element
  */
-fetch('http://free.currencyconverterapi.com/api/v5/currencies', {
+fetch( API_BASE + 'currencies', {
   method: 'get'
 }).then(function (response) {
 
@@ -96,7 +95,7 @@ document.getElementById("convert").onclick = function () {
   let amount = document.getElementById("amount").value; 
 
 
-  fetch('http://free.currencyconverterapi.com/api/v5/convert?q='+ query + '&compact=ultra', {
+  fetch(API_BASE + 'convert?q='+ query + '&compact=ultra', {
     method: 'get'
   }).then(function (response) {
 
