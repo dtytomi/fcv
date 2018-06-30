@@ -9,9 +9,8 @@ this.addEventListener('install', async () => {
   const cache = await caches.open(CACHE_NAME);
   cache.addAll([
     '/',
-    '/static/fcv.js',
+    '/static/main.js',
     '/static/idb.js',
-    '/static/main.css',
     '/static/style.css',
     '/static/vendor/bootstrap/css/bootstrap.min.css',
     '/static/vendor/fontawesome/web-fonts-with-css/css/fontawesome.min.css'

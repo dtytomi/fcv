@@ -25,52 +25,52 @@ fetch('http://free.currencyconverterapi.com/api/v5/currencies', {
   return response.json();
 }).then(function (results) {
 
-  var messages = Object.values(results);
+  var words = Object.values(results);
 
-  let restResult = messages[0];
+  let fullResult = words[0];
 
 
 
-  const dbPromise = idb.open('currency', 1, function (upgradeDb) {
-    let keyValStore = upgradeDb.createObjectStore('keyval', {
+  const databasePromise = idb.open('currency', 1, function (upgradeDb) {
+    let keyValueStored = upgradeDb.createObjectStore('keyval', {
       keyPath: 'id'
     });
   });
 
   
-    dbPromise.then( db => {
-      let tx = db.transaction('keyval', 'readwrite');
-      let keyValStore = tx.objectStore('keyval');
+    databasePromise.then( db => {
+      let text = db.transaction('keyval', 'readwrite');
+      let keyValueStored = text.objectStore('keyval');
           
-      Object.keys(restResult).forEach( key => {
-        let obj = restResult[key];
-        keyValStore.put(obj);
+      Object.keys(fullResult).forEach( key => {
+        let obj = fullResult[key];
+        keyValueStored.put(obj);
       });
 
     });  
 
   // read "hello" in "keyval"
-  dbPromise.then( db => {
-    let tx = db.transaction('keyval');
-    let keyValStore = tx.objectStore('keyval');
-    return keyValStore.getAllKeys();
+  databasePromise.then( db => {
+    let text = db.transaction('keyval');
+    let keyValueStored = text.objectStore('keyval');
+    return keyValueStored.getAllKeys();
   }).then(function (val) {
      
     for (const id of val) {
 
-      let node = document.createElement("option");
-      let textnode = document.createTextNode(`${id}`);
-      node.appendChild(textnode);
-      document.getElementById("fromCurrency").appendChild(node);
+      let nodes = document.createElement("option");
+      let textNodes = document.createTextNode(`${id}`);
+      nodes.appendChild(textNodes);
+      document.getElementById("fromCurrency").appendChild(nodes);
     
     }
 
     for (const id of val) {
 
-      let node = document.createElement("option");
-      let textnode = document.createTextNode(`${id}`);
-      node.appendChild(textnode);
-      document.getElementById("toCurrency").appendChild(node);
+      let nodes = document.createElement("option");
+      let textNodes = document.createTextNode(`${id}`);
+      nodes.appendChild(textNodes);
+      document.getElementById("toCurrency").appendChild(nodes);
 
     }
 
@@ -103,43 +103,43 @@ document.getElementById("convert").onclick = function () {
     return response.json();
   }).then(function (results) {
 
-    const dbPromise = idb.open('conversions', 1, upgradeDB => {
+    const databasePromise = idb.open('conversions', 1, upgradeDB => {
       upgradeDB.createObjectStore('keyval');
     });
 
     const idbKeyval = {
       get(key) {
-        return dbPromise.then(db => {
+        return databasePromise.then(db => {
           return db.transaction('keyval')
             .objectStore('keyval').get(key);
         });
       },
       set(key, val) {
-        return dbPromise.then(db => {
-          const tx = db.transaction('keyval', 'readwrite');
-          tx.objectStore('keyval').put(val, key);
-          return tx.complete;
+        return databasePromise.then(db => {
+          const text = db.transaction('keyval', 'readwrite');
+          text.objectStore('keyval').put(val, key);
+          return text.complete;
         });
       },
       delete(key) {
-        return dbPromise.then(db => {
-          const tx = db.transaction('keyval', 'readwrite');
-          tx.objectStore('keyval').delete(key);
-          return tx.complete;
+        return databasePromise.then(db => {
+          const text = db.transaction('keyval', 'readwrite');
+          text.objectStore('keyval').delete(key);
+          return text.complete;
         });
       },
       clear() {
-        return dbPromise.then(db => {
-          const tx = db.transaction('keyval', 'readwrite');
-          tx.objectStore('keyval').clear();
-          return tx.complete;
+        return databasePromise.then(db => {
+          const text = db.transaction('keyval', 'readwrite');
+          text.objectStore('keyval').clear();
+          return text.complete;
         });
       },
       keys() {
-        return dbPromise.then(db => {
-          const tx = db.transaction('keyval');
+        return databasePromise.then(db => {
+          const text = db.transaction('keyval');
           const keys = [];
-          const store = tx.objectStore('keyval');
+          const store = text.objectStore('keyval');
 
           // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
           // openKeyCursor isn't supported by Safari, so we fall back
@@ -149,7 +149,7 @@ document.getElementById("convert").onclick = function () {
             cursor.continue();
           });
 
-          return tx.complete.then(() => keys);
+          return text.complete.then(() => keys);
         });
       }
     };
